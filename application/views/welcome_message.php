@@ -1,5 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
+redirect(base_url('/admin/dashboard'));
 ?><!DOCTYPE html>
 <html lang="en">
 <head>
