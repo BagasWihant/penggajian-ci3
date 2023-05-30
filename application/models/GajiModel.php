@@ -18,4 +18,9 @@ class GajiModel extends CI_Model
         $this->db->where($where);
         $this->db->delete($table);
     }
+    public function jmlData($kolom,$cari,$table){
+        $this->db->like($kolom,$cari); // WHERE `kolom` LIKE '%match%' ESCAPE '!'
+        return $this->db->from($table);
+
+    }
 }
