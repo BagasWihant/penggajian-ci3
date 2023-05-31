@@ -12,6 +12,10 @@
             <i class="fas fa-plus-circle"></i>
             Tambah
         </button>
+        <button class="btn btn-danger btn" id="hapusData">
+            <i class="fas fa-trash"></i>
+            Hapus
+        </button>
         <!-- Modal ADD -->
         <div class="modal fade" id="tambahModal" tabindex="-1" role="dialog" aria-labelledby="tambahModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -48,14 +52,15 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="add" method="post">
+                        <form action="" method="post">
+                            <input type="hidden" id='idu'>
                             <b>Uang Transport</b><input class="form-control" type="text" name="uang_trans2" id="uang_trans2" placeholder="Uang Transport" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">
                             <b>Uang Makan </b><input class="form-control" type="text" name="uang_makan2" id="uang_makan2" placeholder="Uang Makan" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">
                             <b>Gaji Pokok </b><input class="form-control" type="text" name="gaji2" id="gaji2" placeholder="Gaji Pokok" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Update </button>
+                        <button type="submit" id='updateData' class="btn btn-primary"><i class="far fa-save"></i> Update </button>
                     </div>
                     </form>
                 </div>
@@ -137,10 +142,12 @@
             let trans = data[2];
             let makan = data[3];
             let gaji = data[4];
+            let id = data[0];
             $('#updateModal').modal('show');
             $('#uang_trans2').val(tandaPemisahTitik(trans));
             $('#uang_makan2').val(tandaPemisahTitik(makan));
             $('#gaji2').val(tandaPemisahTitik(gaji));
+            $('#idu').val(id);
         });
 
         $('#simpanData').on("click", function(e) {
@@ -164,6 +171,57 @@
                 }
             });
         })
+
+        $('#updateData').on("click", function(e) {
+            e.preventDefault();
+            var uang_trans2 = $('#uang_trans2').val();
+            var uang_makan2 = $('#uang_makan2').val();
+            var gaji2 = $('#gaji2').val();
+            var id = $('#idu').val();
+
+            $('#formUpdate').find("input,textarea,select").val('')
+            $('#updateModal').modal('hide')
+            $.post('updateDataJabatan', {
+                uang_makan: uang_makan2,
+                uang_trans: uang_trans2,
+                gaji:gaji2,
+                id: id,
+            }, function(res) {
+                res = JSON.parse(res)
+                if (res.success) {
+                    table.ajax.reload(null, false);
+                }
+            });
+        })
+
+        
+        $('#hapusData').click(function() {
+            let data = table.rows('.selected').data().toArray()
+            let jml = data.length
+            if (jml > 0) {
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: "Menghapus " + jml + " pegawai?",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.post('deleteData', {
+                            data: data
+                        }, function(res) {
+                            res = JSON.parse(res)
+                            if (res.success) {
+                                table.ajax.reload();
+                            }
+                        });
+                    }
+                })
+            }
+        });
+
     });
 
     function tandaPemisahTitik(b) {

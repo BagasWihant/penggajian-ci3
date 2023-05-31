@@ -42,7 +42,6 @@ class Jabatan extends CI_Controller{
         }
         
     }
-
     
     // FORM VALIDASI
     public function rulesAdd()
@@ -90,10 +89,7 @@ class Jabatan extends CI_Controller{
         $uang_trans = $this->input->post('uang_trans');
         $uang_makan = $this->input->post('uang_makan');
         $gaji = $this->input->post('gaji');
-        $uang_transOld = $this->input->post('transOld');
-        $uang_makanOld = $this->input->post('makanOld');
-        $gajiOld = $this->input->post('gajiOld');
-        $jabatanOld = $this->input->post('jabatanOld');
+        $id = $this->input->post('id');
         
         $data = array(
             'tunj_makan' => str_replace('.','',$uang_makan),
@@ -101,15 +97,26 @@ class Jabatan extends CI_Controller{
             'gaji' => str_replace('.','',$gaji)
         );
         $where = array(
-            'nama' => $jabatanOld,
-            'tunj_makan' => str_replace('.','',$uang_makanOld),
-            'tunj_transport' => str_replace('.','',$uang_transOld),
-            'gaji' => str_replace('.','',$gajiOld)
+            'id' => $id
         );
 
 
 
         $this->GajiModel->updateData('data_jabatan',$data,$where);
            echo json_encode(array('success'=>true));
+    }
+    public function deleteData()
+    {
+        $data = $this->input->post('data');
+        if (count($data) > 0) {
+            foreach ($data as $value) {
+                $id = $value[0];
+                $nama = $value[1];
+                $where = array('id' => $id, 'nama' => $nama);
+                $this->GajiModel->deleteData('data_jabatan', $where);
+
+            }
+            echo json_encode(array('pesan'=> 'Data berhasil dihapus','success'=>true));
+        }
     }
 }
