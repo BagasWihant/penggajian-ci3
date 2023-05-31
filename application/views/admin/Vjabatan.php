@@ -12,7 +12,7 @@
             <i class="fas fa-plus-circle"></i>
             Tambah
         </button>
-        <!-- Modal -->
+        <!-- Modal ADD -->
         <div class="modal fade" id="tambahModal" tabindex="-1" role="dialog" aria-labelledby="tambahModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
@@ -23,15 +23,39 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="add" method="post">
-                            <b>Jabatan </b><input class="form-control" type="text" name="jabatan" placeholder="Jabatan">
-                            <b>Uang Transport</b><input class="form-control" type="text" name="uang_trans" placeholder="Uang Transport" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">
-                            <b>Uang Makan </b><input class="form-control" type="text" name="uang_makan" placeholder="Uang Makan" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">
-                            <b>Gaji Pokok </b><input class="form-control" type="text" name="gaji" placeholder="Gaji Pokok" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">
+                        <form action="" id="formAdd" method="post">
+                            <b>Jabatan </b><input class="form-control" type="text" name="jabatan" id="jabatan" placeholder="Jabatan">
+                            <b>Uang Transport</b><input class="form-control" type="text" name="uang_trans" id="uang_trans" placeholder="Uang Transport" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">
+                            <b>Uang Makan </b><input class="form-control" type="text" name="uang_makan" id="uang_makan" placeholder="Uang Makan" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">
+                            <b>Gaji Pokok </b><input class="form-control" type="text" name="gaji" id="gaji" placeholder="Gaji Pokok" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Simpan </button>
+                        <button type="submit" id='simpanData'class="btn btn-primary"><i class="far fa-save"></i> Simpan </button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="updateModal" tabindex="-1" role="dialog" aria-labelledby="updateModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateModalLabel">Update Jabatan</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form action="add" method="post">
+                            <b>Uang Transport</b><input class="form-control" type="text" name="uang_trans2" id="uang_trans2" placeholder="Uang Transport" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">
+                            <b>Uang Makan </b><input class="form-control" type="text" name="uang_makan2" id="uang_makan2" placeholder="Uang Makan" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">
+                            <b>Gaji Pokok </b><input class="form-control" type="text" name="gaji2" id="gaji2" placeholder="Gaji Pokok" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary"><i class="far fa-save"></i> Update </button>
                     </div>
                     </form>
                 </div>
@@ -43,11 +67,13 @@
     <table class="table table-striped" id="dataJabatan" style="width: 100%;">
         <thead class="table-dark">
             <tr>
+                <th></th>
                 <th>Jabatan</th>
                 <th>Uang Transport</th>
                 <th>Uang Makan</th>
                 <th>Gaji</th>
                 <th>Total</th>
+                <th>Aksi</th>
             </tr>
         </thead>
 
@@ -57,79 +83,87 @@
 </div>
 <script>
     $(function() {
-        console.log('as')
-        $('#dataJabatan').DataTable({
-            ajax: './getAllData',
-            columns: [{
-                    data: 'nama'
+        var table = $('#dataJabatan').DataTable({
+            columnDefs: [{
+                    orderable: false,
+                    className: 'select-checkbox',
+                    targets: 0,
+                    data: null,
+                    defaultContent: ''
                 },
                 {
-                    data: 'tunj_transport'
+                    targets: -1,
+                    data: null,
+                    defaultContent: '<button id="btnEdit" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></button>',
                 },
                 {
-                    data: 'tunj_makan'
-                },
-                {
-                    data: 'gaji'
-                },
-                {
-                    data: 'total'
-                }
-            ]
-        })
-        var table = $('#dataJabatan').DataTable();
-        $('#dataJabatan tbody').on('click', 'tr', (event) => {
-            console.log(table.row(event.currentTarget).data());
-            let jabatan = table.row(event.currentTarget).data().nama;
-            let trans = table.row(event.currentTarget).data().tunj_transport;
-            let makan = table.row(event.currentTarget).data().tunj_makan;
-            let gaji = table.row(event.currentTarget).data().gaji;
-            Swal.fire({
-                title: 'Edit data ' + jabatan,
-                confirmButtonText: 'Update',
-                html: '<div style="text-align: left !important;">Uang Transport<input class="form-control" type="text" name="uang_transSwal" id="uang_transSwal" placeholder="Uang Transport" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)"> ' +
-                    'Uang Makan <input class="form-control" type="text" name="uang_makanSwal" id="uang_makanSwal" placeholder="Uang Makan" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)">' +
-                    'Gaji Pokok<input class="form-control" type="text" name="gajiSwal" id="gajiSwal" placeholder="Gaji Pokok" onkeydown="return numbersonly(this,event);" onkeyup="javascript:tandaPemisahtitik(this)"> </div>',
-                focusConfirm: false,
-                preConfirm: () => {
-                    let transVal = document.getElementById('uang_transSwal').value
-                    let makanVal = document.getElementById('uang_makanSwal').value
-                    let gajiVal = document.getElementById('uang_makanSwal').value
-                    return {
-                        transVal: transVal,
-                        makanVal: makanVal,
-                        gajiVal: gajiVal
+                    targets: [2],
+                    render: function(data, type, row, meta) {
+                        return 'Rp. ' + parseInt(data).toLocaleString('id-ID');
                     }
-                }
-            }).then((result) => {
-                $.ajax({
-                        method: "POST",
-                        url: "./updateDataJabatan",
-                        data: {
-                            uang_trans: result.value.transVal,
-                            uang_makan: result.value.makanVal,
-                            gaji: result.value.gajiVal,
-                            transOld: trans,
-                            makanOld: makan,
-                            gajiOld: gaji,
-                            jabatanOld: jabatan
-                        }
-                    })
-                    .done(function(msg) {
-                        msg = JSON.parse(msg)
-                        if (msg.success) {
-                            Swal.fire(
-                                'Berhasil',
-                                'Data berhasil Diupdate',
-                                'success'
-                            )
-                        }
-                    });
-            })
-            $('#uang_transSwal').val(trans);
-            $('#uang_makanSwal').val(makan);
-            $('#gajiSwal').val(gaji);
+                },
+                {
+                    targets: [3],
+                    render: function(data, type, row, meta) {
+                        return 'Rp. ' + parseInt(data).toLocaleString('id-ID');
+                    }
+                },
+                {
+                    targets: [4],
+                    render: function(data, type, row, meta) {
+                        return 'Rp. ' + parseInt(data).toLocaleString('id-ID');
+                    }
+                },
+                {
+                    targets: [5],
+                    render: function(data, type, row, meta) {
+                        return 'Rp. ' + parseInt(data).toLocaleString('id-ID');
+                    }
+                },
+            ],
+            select: {
+                style: 'multi',
+                selector: 'td:first-child'
+            },
+            ajax: './getAllData',
+
+        })
+
+        $('#dataJabatan tbody').on('click', 'button', function() {
+
+            let data = table.row($(this).parents('tr')).data();
+
+            let jabatan = data[1];
+            let trans = data[2];
+            let makan = data[3];
+            let gaji = data[4];
+            $('#updateModal').modal('show');
+            $('#uang_trans2').val(tandaPemisahTitik(trans));
+            $('#uang_makan2').val(tandaPemisahTitik(makan));
+            $('#gaji2').val(tandaPemisahTitik(gaji));
         });
+
+        $('#simpanData').on("click", function(e) {
+            e.preventDefault();
+            var jabatanA = $('#jabatan').val();
+            var uangTransA = $('#uang_trans').val();
+            var uangMakanA = $('#uang_makan').val();
+            var gajiA = $('#gaji').val();
+
+            $('#formAdd').find("input,textarea,select").val('')
+            $('#tambahModal').modal('hide')
+            $.post('add', {
+                jabatan: jabatanA,
+                uang_trans: uangTransA,
+                uang_makan: uangMakanA,
+                gaji: gajiA
+            }, function(res) {
+                res = JSON.parse(res)
+                if (res.success) {
+                    table.ajax.reload(null, false);
+                }
+            });
+        })
     });
 
     function tandaPemisahTitik(b) {

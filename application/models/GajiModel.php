@@ -20,7 +20,13 @@ class GajiModel extends CI_Model
     }
     public function jmlData($kolom,$cari,$table){
         $this->db->like($kolom,$cari); // WHERE `kolom` LIKE '%match%' ESCAPE '!'
-        return $this->db->from($table);
+        $this->db->from($table);
+        return $this->db->count_all_results();
 
+    }
+    public function cariData($kolom,$cari,$table)
+    {
+        $this->db->where($kolom,$cari);
+        return $this->db->get($table)->row();
     }
 }

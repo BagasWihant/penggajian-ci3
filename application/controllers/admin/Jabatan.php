@@ -37,8 +37,8 @@ class Jabatan extends CI_Controller{
             );
 
             $this->GajiModel->insertData('data_jabatan',$data);
-            $this->session->set_flashdata('pesan','Data berhasil ditambahkan');
-            redirect('/admin/jabatan');
+            echo json_encode(array('success'=>true));
+            
         }
         
     }
@@ -60,11 +60,8 @@ class Jabatan extends CI_Controller{
         // $this->db->select('nama,gaji,tunj_transport,tunj_makan');
         $data = $this->GajiModel->getData('data_jabatan')->result();
         foreach ($data as $key ) {
-            $fix['nama'] = $key->nama;
-            $fix['gaji'] = $key->gaji;
-            $fix['tunj_transport'] = $key->tunj_transport;
-            $fix['tunj_makan'] = $key->tunj_makan;
-            $fix['total'] = $key->tunj_makan + $fix['gaji'] + $fix['tunj_transport'];
+            $total = $key->tunj_makan + $key->gaji + $key->tunj_transport;
+            $fix = array($key->id,$key->nama,$key->tunj_transport,$key->tunj_makan,$key->gaji,$total);
             array_push($newData['data'],$fix);
         }
         echo json_encode($newData);
