@@ -80,7 +80,7 @@ class Pegawai extends CI_Controller
         $data = $this->GajiModel->getData('data_pegawai')->result();
         foreach ($data as $key) {
             $jk = strtolower($key->jenis_kelamin) == 'l' ? 'Laki-laki' : 'Perempuan';
-            $jabatan = $this->GajiModel->cariData('id',$key->jabatan,'data_jabatan');
+            $jabatan = $this->GajiModel->cariData('id',$key->jabatan,'data_jabatan')->row();
             $jabatanNama = $jabatan != null ? $jabatan->nama : '';
             $jabatanID = $jabatan != null ? $jabatan->id : '';
             $fix = array($key->id, $key->nik, $key->nama_pegawai, $jk, $jabatanNama, $key->tgl_masuk,$jabatanID);

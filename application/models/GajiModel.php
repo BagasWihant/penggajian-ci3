@@ -27,6 +27,6 @@ class GajiModel extends CI_Model
     public function cariData($kolom,$cari,$table)
     {
         $this->db->where($kolom,$cari);
-        return $this->db->get($table)->row();
+        return $this->db->get($table);
     }
 }
