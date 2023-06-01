@@ -29,4 +29,11 @@ class GajiModel extends CI_Model
         $this->db->where($kolom,$cari);
         return $this->db->get($table);
     }
+    public function insertBatch($table,$data){
+        if($this->db->insert_batch($table,$data)){
+            return true;
+        }else{
+            return false;
+        }
+    }
 }

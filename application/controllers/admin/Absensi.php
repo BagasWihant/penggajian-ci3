@@ -21,6 +21,27 @@ class Absensi extends CI_Controller{
         
     }
 
+    public function addAbsensi(){
+        $post = $this->input->post();
+        foreach ($post['hadir'] as $data => $val) {            
+            $simpan[] = array(
+                'hadir' => $post['hadir'][$data],
+                'sakit' => $post['sakit'][$data],
+                'alfa' => $post['alpa'][$data],
+                'nik' => $post['nik'][$data],
+                'bulan' => $post['bulan'][$data],
+                'nama_pegawai' => $post['pegawai'][$data],
+                'jenis_kelamin' => $post['jk'][$data],
+                'jabatan' => $post['jb'][$data],
+            );
+        }
+        if($this->GajiModel->insertBatch('data_kehadiran',$simpan)){
+            echo json_encode(array('success'=>true));
+        }else{
+            echo json_encode(array('success'=>false));
+        }
+    }
+
     public function getDataAbsen(){
         $bln = $this->input->get('bulan');
         $thn = $this->input->get('tahun');
@@ -48,7 +69,14 @@ class Absensi extends CI_Controller{
         $no = 0;
         foreach ($data as $key ) {
             $no++;
-            $fix = array($no,$key->nik,$key->nama_pegawai,$key->nama);
+            $fix = array($no.
+            '<input name="bulan[]" type="hidden" value="'.$gab.'">
+            <input name="nik[]" type="hidden" value="'.$key->nik.'">
+            <input name="pegawai[]" type="hidden" value="'.$key->nama_pegawai.'">
+            <input name="jk[]" type="hidden" value="'.$key->jenis_kelamin.'">
+            <input name="jb[]" type="hidden" value="'.$key->jabatan.'">
+            '
+            ,$key->nik,$key->nama_pegawai,$key->nama);
             array_push($newData['data'],$fix);
         }
         $newData['bulan'] = $blnText;
