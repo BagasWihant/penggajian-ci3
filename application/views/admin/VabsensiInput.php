@@ -7,7 +7,7 @@
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
         <p class="h3 mb-0 text-gray-800"><?= $title; ?> </p>
     </div>
-    <a class="btn-sm btn-primary" href="./"><i class="fas fa-back"></i>Kembali</a>
+    <a class="btn-sm btn-primary btn" href="./"><i class="fas fa-back"></i>Kembali</a>
     <div class="form-inline mt-2">
         <div class="form-group mb-2 mr-2">
             <select name="bulan" id="bulan" class="form-control">
