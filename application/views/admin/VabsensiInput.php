@@ -49,6 +49,7 @@
                     <th>Jabatan</th>
                     <th width='9%'>Hadir</th>
                     <th width='9%'>Sakit</th>
+                    <th width='9%'>Ijin</th>
                     <th width='9%'>Alpa</th>
                 </tr>
             </thead>
@@ -101,6 +102,12 @@
                 {
                     orderable: false,
                     targets: 6,
+                    data: null,
+                    defaultContent: '<input type="number" id="ijin[]" name="ijin[]" value="0" style="width:100%;">',
+                },
+                {
+                    orderable: false,
+                    targets: 7,
                     data: null,
                     defaultContent: '<input type="number" id="alpa[]" name="alpa[]" value="0" style="width:100%;">',
                 }

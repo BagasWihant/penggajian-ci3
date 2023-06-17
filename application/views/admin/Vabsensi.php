@@ -51,6 +51,7 @@
                 <th>Jabatan</th>
                 <th width='9%'>Hadir</th>
                 <th width='9%'>Sakit</th>
+                <th width='9%'>Ijin</th>
                 <th width='9%'>Alpa</th>
             </tr>
         </thead>

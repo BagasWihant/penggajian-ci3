@@ -27,6 +27,7 @@ class Absensi extends CI_Controller{
             $simpan[] = array(
                 'hadir' => $post['hadir'][$data],
                 'sakit' => $post['sakit'][$data],
+                'ijin' => $post['ijin'][$data],
                 'alfa' => $post['alpa'][$data],
                 'nik' => $post['nik'][$data],
                 'bulan' => $post['bulan'][$data],
@@ -51,7 +52,7 @@ class Absensi extends CI_Controller{
         $no = 0;
         foreach ($data as $key ) {
             $no++;
-            $fix = array($no,$key->nik,$key->nama_pegawai,$key->jabatan,$key->hadir,$key->sakit,$key->alfa);
+            $fix = array($no,$key->nik,$key->nama_pegawai,$key->jabatan,$key->hadir,$key->sakit,$key->ijin,$key->alfa);
             array_push($newData['data'],$fix);
         }
         echo json_encode($newData);
@@ -64,7 +65,7 @@ class Absensi extends CI_Controller{
         $gab = $thn.$bln; 
         $newData['data'] = array();
         $data = $this->db->query("SELECT * FROM data_pegawai k INNER join data_jabatan j on k.jabatan = j.id 
-                WHERE not exists(select * from data_kehadiran kk where bulan ='$gab' and k.nik =kk.nik)")->result();
+                WHERE not exists(select * from data_kehadiran kk where bulan ='$gab' and k.nik =kk.nik) AND DATE_FORMAT(k.tgl_masuk,'%Y%m') <= '$gab'")->result();
         // $data = $this->GajiModel->getData('data_kehadiran')->result();
         $no = 0;
         foreach ($data as $key ) {
